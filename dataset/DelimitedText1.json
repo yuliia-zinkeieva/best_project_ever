@@ -10,7 +10,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureDataLakeStoreLocation",
-				"folderPath": "data"
+				"folderPath": {
+					"value": "/@{formatDateTime(adddays(utcnow(),-1),'yyyy')}/@{formatDateTime(adddays(utcnow(),-1),'MM')}/@{formatDateTime(adddays(utcnow(),-1),'dd')}\n",
+					"type": "Expression"
+				}
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
