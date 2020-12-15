@@ -1,0 +1,286 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "DataFactoryZink"
+		},
+		"SqlServer1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SqlServer1'"
+		},
+		"Data Lake Storage Project_properties_typeProperties_dataLakeStoreUri": {
+			"type": "string",
+			"defaultValue": "https://project.azuredatalakestore.net/webhdfs/v1"
+		},
+		"Data Lake Storage Project_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "2611abf3-4765-483b-8358-29d44f20cc60"
+		},
+		"Data Lake Storage Project_properties_typeProperties_subscriptionId": {
+			"type": "string",
+			"defaultValue": "860aca21-634a-48f2-944b-cfaeb4b127a5"
+		},
+		"Data Lake Storage Project_properties_typeProperties_resourceGroupName": {
+			"type": "string",
+			"defaultValue": "ProjectGroup"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/SqlServer1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('SqlServer1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Data Lake Storage Project')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDataLakeStore",
+				"typeProperties": {
+					"dataLakeStoreUri": "[parameters('Data Lake Storage Project_properties_typeProperties_dataLakeStoreUri')]",
+					"tenant": "[parameters('Data Lake Storage Project_properties_typeProperties_tenant')]",
+					"subscriptionId": "[parameters('Data Lake Storage Project_properties_typeProperties_subscriptionId')]",
+					"resourceGroupName": "[parameters('Data Lake Storage Project_properties_typeProperties_resourceGroupName')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SqlServerTable1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SqlServer1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "datetime",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "product_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "shop_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "qnty",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "price",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 2
+					},
+					{
+						"name": "cost",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 2
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "sales"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Data Lake Storage Project",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureDataLakeStoreLocation",
+						"folderPath": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Data Lake Storage Project')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "01:00:00",
+							"retry": 2,
+							"retryIntervalInSeconds": 44,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureDataLakeStoreWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".csv"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "id",
+											"type": "Int32"
+										},
+										"sink": {
+											"type": "Int32",
+											"ordinal": 1
+										}
+									},
+									{
+										"source": {
+											"name": "datetime",
+											"type": "DateTime"
+										},
+										"sink": {
+											"type": "DateTime",
+											"ordinal": 2
+										}
+									},
+									{
+										"source": {
+											"name": "product_id",
+											"type": "Int32"
+										},
+										"sink": {
+											"type": "Int32",
+											"ordinal": 3
+										}
+									},
+									{
+										"source": {
+											"name": "shop_id",
+											"type": "Int32"
+										},
+										"sink": {
+											"type": "Int32",
+											"ordinal": 4
+										}
+									},
+									{
+										"source": {
+											"name": "qnty",
+											"type": "Int32"
+										},
+										"sink": {
+											"type": "Int32",
+											"ordinal": 5
+										}
+									},
+									{
+										"source": {
+											"name": "price",
+											"type": "Decimal"
+										},
+										"sink": {
+											"type": "Decimal",
+											"ordinal": 6
+										}
+									},
+									{
+										"source": {
+											"name": "cost",
+											"type": "Decimal"
+										},
+										"sink": {
+											"type": "Decimal",
+											"ordinal": 7
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SqlServerTable1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DelimitedText1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SqlServerTable1')]",
+				"[concat(variables('factoryId'), '/datasets/DelimitedText1')]"
+			]
+		}
+	]
+}

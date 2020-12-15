@@ -1,0 +1,77 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "DataFactoryZink"
+		},
+		"SqlServer1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SqlServer1'"
+		},
+		"Data Lake Storage Project_properties_typeProperties_dataLakeStoreUri": {
+			"type": "string",
+			"defaultValue": "https://project.azuredatalakestore.net/webhdfs/v1"
+		},
+		"Data Lake Storage Project_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "2611abf3-4765-483b-8358-29d44f20cc60"
+		},
+		"Data Lake Storage Project_properties_typeProperties_subscriptionId": {
+			"type": "string",
+			"defaultValue": "860aca21-634a-48f2-944b-cfaeb4b127a5"
+		},
+		"Data Lake Storage Project_properties_typeProperties_resourceGroupName": {
+			"type": "string",
+			"defaultValue": "ProjectGroup"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "DataFactoryZink_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"SqlServer1_connectionString": {
+						"value": "[parameters('SqlServer1_connectionString')]"
+					},
+					"Data Lake Storage Project_properties_typeProperties_dataLakeStoreUri": {
+						"value": "[parameters('Data Lake Storage Project_properties_typeProperties_dataLakeStoreUri')]"
+					},
+					"Data Lake Storage Project_properties_typeProperties_tenant": {
+						"value": "[parameters('Data Lake Storage Project_properties_typeProperties_tenant')]"
+					},
+					"Data Lake Storage Project_properties_typeProperties_subscriptionId": {
+						"value": "[parameters('Data Lake Storage Project_properties_typeProperties_subscriptionId')]"
+					},
+					"Data Lake Storage Project_properties_typeProperties_resourceGroupName": {
+						"value": "[parameters('Data Lake Storage Project_properties_typeProperties_resourceGroupName')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
