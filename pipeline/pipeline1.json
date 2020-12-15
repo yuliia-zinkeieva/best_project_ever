@@ -7,9 +7,9 @@
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
+					"timeout": "01:00:00",
+					"retry": 2,
+					"retryIntervalInSeconds": 2,
 					"secureOutput": false,
 					"secureInput": false
 				},
@@ -20,11 +20,103 @@
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
-					"enableStaging": false
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureDataLakeStoreWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".csv"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "id",
+									"type": "Int32"
+								},
+								"sink": {
+									"type": "Int32",
+									"ordinal": 1
+								}
+							},
+							{
+								"source": {
+									"name": "datetime",
+									"type": "DateTime"
+								},
+								"sink": {
+									"type": "DateTime",
+									"ordinal": 2
+								}
+							},
+							{
+								"source": {
+									"name": "product_id",
+									"type": "Int32"
+								},
+								"sink": {
+									"type": "Int32",
+									"ordinal": 3
+								}
+							},
+							{
+								"source": {
+									"name": "shop_id",
+									"type": "Int32"
+								},
+								"sink": {
+									"type": "Int32",
+									"ordinal": 4
+								}
+							},
+							{
+								"source": {
+									"name": "qnty",
+									"type": "Int32"
+								},
+								"sink": {
+									"type": "Int32",
+									"ordinal": 5
+								}
+							},
+							{
+								"source": {
+									"name": "price",
+									"type": "Decimal"
+								},
+								"sink": {
+									"type": "Decimal",
+									"ordinal": 6
+								}
+							},
+							{
+								"source": {
+									"name": "cost",
+									"type": "Decimal"
+								},
+								"sink": {
+									"type": "Decimal",
+									"ordinal": 7
+								}
+							}
+						]
+					}
 				},
 				"inputs": [
 					{
 						"referenceName": "SqlServerTable1",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DelimitedText1",
 						"type": "DatasetReference"
 					}
 				]
