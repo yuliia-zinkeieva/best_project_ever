@@ -2,7 +2,7 @@
 	"name": "OutputStream",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "Data Lake Storage Test",
+			"referenceName": "AzureDataLakeStore1",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
