@@ -7,41 +7,37 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "DataFactoryZink"
 		},
+		"AzureDataLakeStore1_servicePrincipalKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalKey' of 'AzureDataLakeStore1'"
+		},
 		"SqlServer1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SqlServer1'"
 		},
-		"Data Lake Storage Project_properties_typeProperties_dataLakeStoreUri": {
+		"AzureDataLakeStore1_properties_typeProperties_dataLakeStoreUri": {
 			"type": "string",
 			"defaultValue": "https://project.azuredatalakestore.net/webhdfs/v1"
 		},
-		"Data Lake Storage Project_properties_typeProperties_tenant": {
+		"AzureDataLakeStore1_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "c798cd2f-62ae-4b43-8e52-58d27b6f8dc4"
+		},
+		"AzureDataLakeStore1_properties_typeProperties_tenant": {
 			"type": "string",
 			"defaultValue": "2611abf3-4765-483b-8358-29d44f20cc60"
 		},
-		"Data Lake Storage Project_properties_typeProperties_subscriptionId": {
+		"AzureDataLakeStore1_properties_typeProperties_subscriptionId": {
 			"type": "string",
 			"defaultValue": "860aca21-634a-48f2-944b-cfaeb4b127a5"
 		},
-		"Data Lake Storage Project_properties_typeProperties_resourceGroupName": {
+		"AzureDataLakeStore1_properties_typeProperties_resourceGroupName": {
 			"type": "string",
 			"defaultValue": "ProjectGroup"
 		},
-		"Data Lake Storage Test_properties_typeProperties_dataLakeStoreUri": {
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
 			"type": "string",
-			"defaultValue": "https://project.azuredatalakestore.net/webhdfs/v1"
-		},
-		"Data Lake Storage Test_properties_typeProperties_tenant": {
-			"type": "string",
-			"defaultValue": "2611abf3-4765-483b-8358-29d44f20cc60"
-		},
-		"Data Lake Storage Test_properties_typeProperties_subscriptionId": {
-			"type": "string",
-			"defaultValue": "860aca21-634a-48f2-944b-cfaeb4b127a5"
-		},
-		"Data Lake Storage Test_properties_typeProperties_resourceGroupName": {
-			"type": "string",
-			"defaultValue": "ProjectGroup"
+			"defaultValue": "https://keyvaultbest.vault.azure.net/"
 		},
 		"containerUri": {
 			"type": "string",
@@ -70,32 +66,29 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"AzureDataLakeStore1_servicePrincipalKey": {
+						"value": "[parameters('AzureDataLakeStore1_servicePrincipalKey')]"
+					},
 					"SqlServer1_connectionString": {
 						"value": "[parameters('SqlServer1_connectionString')]"
 					},
-					"Data Lake Storage Project_properties_typeProperties_dataLakeStoreUri": {
-						"value": "[parameters('Data Lake Storage Project_properties_typeProperties_dataLakeStoreUri')]"
+					"AzureDataLakeStore1_properties_typeProperties_dataLakeStoreUri": {
+						"value": "[parameters('AzureDataLakeStore1_properties_typeProperties_dataLakeStoreUri')]"
 					},
-					"Data Lake Storage Project_properties_typeProperties_tenant": {
-						"value": "[parameters('Data Lake Storage Project_properties_typeProperties_tenant')]"
+					"AzureDataLakeStore1_properties_typeProperties_servicePrincipalId": {
+						"value": "[parameters('AzureDataLakeStore1_properties_typeProperties_servicePrincipalId')]"
 					},
-					"Data Lake Storage Project_properties_typeProperties_subscriptionId": {
-						"value": "[parameters('Data Lake Storage Project_properties_typeProperties_subscriptionId')]"
+					"AzureDataLakeStore1_properties_typeProperties_tenant": {
+						"value": "[parameters('AzureDataLakeStore1_properties_typeProperties_tenant')]"
 					},
-					"Data Lake Storage Project_properties_typeProperties_resourceGroupName": {
-						"value": "[parameters('Data Lake Storage Project_properties_typeProperties_resourceGroupName')]"
+					"AzureDataLakeStore1_properties_typeProperties_subscriptionId": {
+						"value": "[parameters('AzureDataLakeStore1_properties_typeProperties_subscriptionId')]"
 					},
-					"Data Lake Storage Test_properties_typeProperties_dataLakeStoreUri": {
-						"value": "[parameters('Data Lake Storage Test_properties_typeProperties_dataLakeStoreUri')]"
+					"AzureDataLakeStore1_properties_typeProperties_resourceGroupName": {
+						"value": "[parameters('AzureDataLakeStore1_properties_typeProperties_resourceGroupName')]"
 					},
-					"Data Lake Storage Test_properties_typeProperties_tenant": {
-						"value": "[parameters('Data Lake Storage Test_properties_typeProperties_tenant')]"
-					},
-					"Data Lake Storage Test_properties_typeProperties_subscriptionId": {
-						"value": "[parameters('Data Lake Storage Test_properties_typeProperties_subscriptionId')]"
-					},
-					"Data Lake Storage Test_properties_typeProperties_resourceGroupName": {
-						"value": "[parameters('Data Lake Storage Test_properties_typeProperties_resourceGroupName')]"
+					"AzureKeyVault1_properties_typeProperties_baseUrl": {
+						"value": "[parameters('AzureKeyVault1_properties_typeProperties_baseUrl')]"
 					}
 				}
 			},

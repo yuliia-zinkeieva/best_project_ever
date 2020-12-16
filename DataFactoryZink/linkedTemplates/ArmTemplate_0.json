@@ -7,41 +7,37 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "DataFactoryZink"
 		},
+		"AzureDataLakeStore1_servicePrincipalKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalKey' of 'AzureDataLakeStore1'"
+		},
 		"SqlServer1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SqlServer1'"
 		},
-		"Data Lake Storage Project_properties_typeProperties_dataLakeStoreUri": {
+		"AzureDataLakeStore1_properties_typeProperties_dataLakeStoreUri": {
 			"type": "string",
 			"defaultValue": "https://project.azuredatalakestore.net/webhdfs/v1"
 		},
-		"Data Lake Storage Project_properties_typeProperties_tenant": {
+		"AzureDataLakeStore1_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "c798cd2f-62ae-4b43-8e52-58d27b6f8dc4"
+		},
+		"AzureDataLakeStore1_properties_typeProperties_tenant": {
 			"type": "string",
 			"defaultValue": "2611abf3-4765-483b-8358-29d44f20cc60"
 		},
-		"Data Lake Storage Project_properties_typeProperties_subscriptionId": {
+		"AzureDataLakeStore1_properties_typeProperties_subscriptionId": {
 			"type": "string",
 			"defaultValue": "860aca21-634a-48f2-944b-cfaeb4b127a5"
 		},
-		"Data Lake Storage Project_properties_typeProperties_resourceGroupName": {
+		"AzureDataLakeStore1_properties_typeProperties_resourceGroupName": {
 			"type": "string",
 			"defaultValue": "ProjectGroup"
 		},
-		"Data Lake Storage Test_properties_typeProperties_dataLakeStoreUri": {
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
 			"type": "string",
-			"defaultValue": "https://project.azuredatalakestore.net/webhdfs/v1"
-		},
-		"Data Lake Storage Test_properties_typeProperties_tenant": {
-			"type": "string",
-			"defaultValue": "2611abf3-4765-483b-8358-29d44f20cc60"
-		},
-		"Data Lake Storage Test_properties_typeProperties_subscriptionId": {
-			"type": "string",
-			"defaultValue": "860aca21-634a-48f2-944b-cfaeb4b127a5"
-		},
-		"Data Lake Storage Test_properties_typeProperties_resourceGroupName": {
-			"type": "string",
-			"defaultValue": "ProjectGroup"
+			"defaultValue": "https://keyvaultbest.vault.azure.net/"
 		}
 	},
 	"variables": {
@@ -49,33 +45,35 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/Data Lake Storage Project')]",
+			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStore1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
 				"type": "AzureDataLakeStore",
 				"typeProperties": {
-					"dataLakeStoreUri": "[parameters('Data Lake Storage Project_properties_typeProperties_dataLakeStoreUri')]",
-					"tenant": "[parameters('Data Lake Storage Project_properties_typeProperties_tenant')]",
-					"subscriptionId": "[parameters('Data Lake Storage Project_properties_typeProperties_subscriptionId')]",
-					"resourceGroupName": "[parameters('Data Lake Storage Project_properties_typeProperties_resourceGroupName')]"
+					"dataLakeStoreUri": "[parameters('AzureDataLakeStore1_properties_typeProperties_dataLakeStoreUri')]",
+					"servicePrincipalId": "[parameters('AzureDataLakeStore1_properties_typeProperties_servicePrincipalId')]",
+					"servicePrincipalKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDataLakeStore1_servicePrincipalKey')]"
+					},
+					"tenant": "[parameters('AzureDataLakeStore1_properties_typeProperties_tenant')]",
+					"subscriptionId": "[parameters('AzureDataLakeStore1_properties_typeProperties_subscriptionId')]",
+					"resourceGroupName": "[parameters('AzureDataLakeStore1_properties_typeProperties_resourceGroupName')]"
 				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Data Lake Storage Test')]",
+			"name": "[concat(parameters('factoryName'), '/AzureKeyVault1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"type": "AzureDataLakeStore",
+				"type": "AzureKeyVault",
 				"typeProperties": {
-					"dataLakeStoreUri": "[parameters('Data Lake Storage Test_properties_typeProperties_dataLakeStoreUri')]",
-					"tenant": "[parameters('Data Lake Storage Test_properties_typeProperties_tenant')]",
-					"subscriptionId": "[parameters('Data Lake Storage Test_properties_typeProperties_subscriptionId')]",
-					"resourceGroupName": "[parameters('Data Lake Storage Test_properties_typeProperties_resourceGroupName')]"
+					"baseUrl": "[parameters('AzureKeyVault1_properties_typeProperties_baseUrl')]"
 				}
 			},
 			"dependsOn": []
@@ -184,7 +182,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "Data Lake Storage Test",
+					"referenceName": "AzureDataLakeStore1",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
@@ -204,7 +202,7 @@
 				"schema": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Data Lake Storage Test')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStore1')]"
 			]
 		},
 		{
@@ -213,7 +211,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "Data Lake Storage Test",
+					"referenceName": "AzureDataLakeStore1",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
@@ -233,7 +231,7 @@
 				"schema": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Data Lake Storage Test')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStore1')]"
 			]
 		},
 		{
@@ -379,6 +377,40 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CopyDbPath",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "OutputStream",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['*/Sales.csv']) ~> source1\nsource1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/CopyDbPath')]",
+				"[concat(variables('factoryId'), '/datasets/OutputStream')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -504,13 +536,51 @@
 								"parameters": {}
 							}
 						]
+					},
+					{
+						"name": "dataflow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Copy data1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
 					}
 				],
 				"annotations": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Sales')]",
-				"[concat(variables('factoryId'), '/datasets/CopyDbPath')]"
+				"[concat(variables('factoryId'), '/datasets/CopyDbPath')]",
+				"[concat(variables('factoryId'), '/dataflows/dataflow1')]"
 			]
 		}
 	]
