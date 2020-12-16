@@ -1,0 +1,22 @@
+{
+	"name": "DataLakeDone",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDataLakeStore",
+		"typeProperties": {
+			"dataLakeStoreUri": "https://project.azuredatalakestore.net/webhdfs/v1",
+			"servicePrincipalId": "secretid",
+			"servicePrincipalKey": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AzureKeyVault1",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "secretkey"
+			},
+			"tenant": "2611abf3-4765-483b-8358-29d44f20cc60",
+			"subscriptionId": "860aca21-634a-48f2-944b-cfaeb4b127a5",
+			"resourceGroupName": "ProjectGroup"
+		}
+	}
+}
