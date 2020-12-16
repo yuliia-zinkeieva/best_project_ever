@@ -1,5 +1,5 @@
 {
-	"name": "Sales",
+	"name": "Products",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "SqlServer1",
@@ -17,34 +17,16 @@
 				"precision": 10
 			},
 			{
-				"name": "datetime",
-				"type": "datetime",
-				"precision": 23,
-				"scale": 3
+				"name": "name",
+				"type": "varchar"
 			},
 			{
-				"name": "product_id",
+				"name": "category_id",
 				"type": "int",
 				"precision": 10
 			},
 			{
-				"name": "shop_id",
-				"type": "int",
-				"precision": 10
-			},
-			{
-				"name": "qnty",
-				"type": "int",
-				"precision": 10
-			},
-			{
-				"name": "price",
-				"type": "decimal",
-				"precision": 18,
-				"scale": 2
-			},
-			{
-				"name": "cost",
+				"name": "price_net",
 				"type": "decimal",
 				"precision": 18,
 				"scale": 2
@@ -52,7 +34,7 @@
 		],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "sales"
+			"table": "products"
 		}
 	}
 }

@@ -1,5 +1,5 @@
 {
-	"name": "CopyDbPath",
+	"name": "OutputStream",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Data Lake Storage Test",
@@ -11,7 +11,7 @@
 			"location": {
 				"type": "AzureDataLakeStoreLocation",
 				"folderPath": {
-					"value": "/data/@{formatDateTime(adddays(utcnow(),-1),'yyyy')}/@{formatDateTime(adddays(utcnow(),-1),'MM')}/@{formatDateTime(adddays(utcnow(),-1),'dd')}\n",
+					"value": "/output/@{formatDateTime(adddays(utcnow(),-1),'yyyy')}/@{formatDateTime(adddays(utcnow(),-1),'MM')}/@{formatDateTime(adddays(utcnow(),-1),'dd')}\n",
 					"type": "Expression"
 				}
 			},

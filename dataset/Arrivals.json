@@ -1,5 +1,5 @@
 {
-	"name": "Sales",
+	"name": "Arrivals",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "SqlServer1",
@@ -36,23 +36,11 @@
 				"name": "qnty",
 				"type": "int",
 				"precision": 10
-			},
-			{
-				"name": "price",
-				"type": "decimal",
-				"precision": 18,
-				"scale": 2
-			},
-			{
-				"name": "cost",
-				"type": "decimal",
-				"precision": 18,
-				"scale": 2
 			}
 		],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "sales"
+			"table": "arrivals"
 		}
 	}
 }
