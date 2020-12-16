@@ -1,0 +1,11 @@
+{
+	"name": "AzureDataLakeStore1",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDataLakeStore",
+		"typeProperties": {
+			"dataLakeStoreUri": "https://undefined.azuredatalakestore.net/webhdfs/v1",
+			"tenant": "2611abf3-4765-483b-8358-29d44f20cc60"
+		}
+	}
+}
