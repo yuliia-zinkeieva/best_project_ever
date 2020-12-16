@@ -20,6 +20,18 @@
 		"Data Lake Storage Project_properties_typeProperties_resourceGroupName": {
 			"value": "ProjectGroup"
 		},
+		"Data Lake Storage Test_properties_typeProperties_dataLakeStoreUri": {
+			"value": "https://project.azuredatalakestore.net/webhdfs/v1"
+		},
+		"Data Lake Storage Test_properties_typeProperties_tenant": {
+			"value": "2611abf3-4765-483b-8358-29d44f20cc60"
+		},
+		"Data Lake Storage Test_properties_typeProperties_subscriptionId": {
+			"value": "860aca21-634a-48f2-944b-cfaeb4b127a5"
+		},
+		"Data Lake Storage Test_properties_typeProperties_resourceGroupName": {
+			"value": "ProjectGroup"
+		},
 		"containerUri": {
 			"value": ""
 		},

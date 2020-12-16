@@ -27,6 +27,22 @@
 			"type": "string",
 			"defaultValue": "ProjectGroup"
 		},
+		"Data Lake Storage Test_properties_typeProperties_dataLakeStoreUri": {
+			"type": "string",
+			"defaultValue": "https://project.azuredatalakestore.net/webhdfs/v1"
+		},
+		"Data Lake Storage Test_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "2611abf3-4765-483b-8358-29d44f20cc60"
+		},
+		"Data Lake Storage Test_properties_typeProperties_subscriptionId": {
+			"type": "string",
+			"defaultValue": "860aca21-634a-48f2-944b-cfaeb4b127a5"
+		},
+		"Data Lake Storage Test_properties_typeProperties_resourceGroupName": {
+			"type": "string",
+			"defaultValue": "ProjectGroup"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -68,6 +84,18 @@
 					},
 					"Data Lake Storage Project_properties_typeProperties_resourceGroupName": {
 						"value": "[parameters('Data Lake Storage Project_properties_typeProperties_resourceGroupName')]"
+					},
+					"Data Lake Storage Test_properties_typeProperties_dataLakeStoreUri": {
+						"value": "[parameters('Data Lake Storage Test_properties_typeProperties_dataLakeStoreUri')]"
+					},
+					"Data Lake Storage Test_properties_typeProperties_tenant": {
+						"value": "[parameters('Data Lake Storage Test_properties_typeProperties_tenant')]"
+					},
+					"Data Lake Storage Test_properties_typeProperties_subscriptionId": {
+						"value": "[parameters('Data Lake Storage Test_properties_typeProperties_subscriptionId')]"
+					},
+					"Data Lake Storage Test_properties_typeProperties_resourceGroupName": {
+						"value": "[parameters('Data Lake Storage Test_properties_typeProperties_resourceGroupName')]"
 					}
 				}
 			},

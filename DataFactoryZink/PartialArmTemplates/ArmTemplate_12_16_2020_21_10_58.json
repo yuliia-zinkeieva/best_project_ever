@@ -6,42 +6,6 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "DataFactoryZink"
-		},
-		"SqlServer1_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'SqlServer1'"
-		},
-		"Data Lake Storage Project_properties_typeProperties_dataLakeStoreUri": {
-			"type": "string",
-			"defaultValue": "https://project.azuredatalakestore.net/webhdfs/v1"
-		},
-		"Data Lake Storage Project_properties_typeProperties_tenant": {
-			"type": "string",
-			"defaultValue": "2611abf3-4765-483b-8358-29d44f20cc60"
-		},
-		"Data Lake Storage Project_properties_typeProperties_subscriptionId": {
-			"type": "string",
-			"defaultValue": "860aca21-634a-48f2-944b-cfaeb4b127a5"
-		},
-		"Data Lake Storage Project_properties_typeProperties_resourceGroupName": {
-			"type": "string",
-			"defaultValue": "ProjectGroup"
-		},
-		"Data Lake Storage Test_properties_typeProperties_dataLakeStoreUri": {
-			"type": "string",
-			"defaultValue": "https://project.azuredatalakestore.net/webhdfs/v1"
-		},
-		"Data Lake Storage Test_properties_typeProperties_tenant": {
-			"type": "string",
-			"defaultValue": "2611abf3-4765-483b-8358-29d44f20cc60"
-		},
-		"Data Lake Storage Test_properties_typeProperties_subscriptionId": {
-			"type": "string",
-			"defaultValue": "860aca21-634a-48f2-944b-cfaeb4b127a5"
-		},
-		"Data Lake Storage Test_properties_typeProperties_resourceGroupName": {
-			"type": "string",
-			"defaultValue": "ProjectGroup"
 		}
 	},
 	"variables": {
@@ -163,15 +127,13 @@
 						"inputs": [
 							{
 								"referenceName": "Sales",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						],
 						"outputs": [
 							{
 								"referenceName": "CopyDbPath",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						]
 					}
@@ -230,9 +192,7 @@
 					"table": "arrivals"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Categories')]",
@@ -264,9 +224,7 @@
 					"table": "categories"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/CopyDbPath')]",
@@ -367,9 +325,7 @@
 					"table": "products"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Sales')]",
@@ -430,9 +386,7 @@
 					"table": "sales"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Shops')]",
@@ -464,24 +418,6 @@
 					"table": "shops"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Data Lake Storage Project')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureDataLakeStore",
-				"typeProperties": {
-					"dataLakeStoreUri": "[parameters('Data Lake Storage Project_properties_typeProperties_dataLakeStoreUri')]",
-					"tenant": "[parameters('Data Lake Storage Project_properties_typeProperties_tenant')]",
-					"subscriptionId": "[parameters('Data Lake Storage Project_properties_typeProperties_subscriptionId')]",
-					"resourceGroupName": "[parameters('Data Lake Storage Project_properties_typeProperties_resourceGroupName')]"
-				}
-			},
 			"dependsOn": []
 		},
 		{
@@ -492,23 +428,10 @@
 				"annotations": [],
 				"type": "AzureDataLakeStore",
 				"typeProperties": {
-					"dataLakeStoreUri": "[parameters('Data Lake Storage Test_properties_typeProperties_dataLakeStoreUri')]",
-					"tenant": "[parameters('Data Lake Storage Test_properties_typeProperties_tenant')]",
-					"subscriptionId": "[parameters('Data Lake Storage Test_properties_typeProperties_subscriptionId')]",
-					"resourceGroupName": "[parameters('Data Lake Storage Test_properties_typeProperties_resourceGroupName')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SqlServer1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('SqlServer1_connectionString')]"
+					"dataLakeStoreUri": "https://project.azuredatalakestore.net/webhdfs/v1",
+					"tenant": "2611abf3-4765-483b-8358-29d44f20cc60",
+					"subscriptionId": "860aca21-634a-48f2-944b-cfaeb4b127a5",
+					"resourceGroupName": "ProjectGroup"
 				}
 			},
 			"dependsOn": []
