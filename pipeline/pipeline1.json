@@ -586,7 +586,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Products",
+						"referenceName": "Shops",
 						"type": "DatasetReference"
 					}
 				],
