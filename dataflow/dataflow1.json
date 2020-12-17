@@ -1,7 +1,6 @@
 {
 	"name": "dataflow1",
 	"properties": {
-		"description": "",
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
@@ -10,7 +9,7 @@
 						"referenceName": "CopyDbPath",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "Arrivals"
 				}
 			],
 			"sinks": [
@@ -23,7 +22,7 @@
 				}
 			],
 			"transformations": [],
-			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['data/*/dbo.sales.csv']) ~> source1\nsource1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['data/*/dbo.arrivals.csv']) ~> Arrivals\nArrivals sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
 		}
 	}
 }
