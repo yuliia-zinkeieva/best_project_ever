@@ -41,8 +41,8 @@
 									"type": "Int32"
 								},
 								"sink": {
-									"type": "Int32",
-									"ordinal": 1
+									"name": "id",
+									"type": "Int32"
 								}
 							},
 							{
@@ -51,8 +51,8 @@
 									"type": "DateTime"
 								},
 								"sink": {
-									"type": "DateTime",
-									"ordinal": 2
+									"name": "datetime",
+									"type": "DateTime"
 								}
 							},
 							{
@@ -61,8 +61,8 @@
 									"type": "Int32"
 								},
 								"sink": {
-									"type": "Int32",
-									"ordinal": 3
+									"name": "product_id",
+									"type": "Int32"
 								}
 							},
 							{
@@ -71,8 +71,8 @@
 									"type": "Int32"
 								},
 								"sink": {
-									"type": "Int32",
-									"ordinal": 4
+									"name": "shop_id",
+									"type": "Int32"
 								}
 							},
 							{
@@ -81,28 +81,8 @@
 									"type": "Int32"
 								},
 								"sink": {
-									"type": "Int32",
-									"ordinal": 5
-								}
-							},
-							{
-								"source": {
-									"name": "price",
-									"type": "Decimal"
-								},
-								"sink": {
-									"type": "Decimal",
-									"ordinal": 6
-								}
-							},
-							{
-								"source": {
-									"name": "cost",
-									"type": "Decimal"
-								},
-								"sink": {
-									"type": "Decimal",
-									"ordinal": 7
+									"name": "qnty",
+									"type": "Int32"
 								}
 							}
 						]
@@ -160,68 +140,38 @@
 									"type": "Int32"
 								},
 								"sink": {
-									"type": "Int32",
-									"ordinal": 1
+									"name": "id",
+									"type": "Int32"
 								}
 							},
 							{
 								"source": {
-									"name": "datetime",
-									"type": "DateTime"
+									"name": "name",
+									"type": "String"
 								},
 								"sink": {
-									"type": "DateTime",
-									"ordinal": 2
+									"name": "name",
+									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "product_id",
+									"name": "category_id",
 									"type": "Int32"
 								},
 								"sink": {
-									"type": "Int32",
-									"ordinal": 3
-								}
-							},
-							{
-								"source": {
-									"name": "shop_id",
+									"name": "category_id",
 									"type": "Int32"
-								},
-								"sink": {
-									"type": "Int32",
-									"ordinal": 4
 								}
 							},
 							{
 								"source": {
-									"name": "qnty",
-									"type": "Int32"
-								},
-								"sink": {
-									"type": "Int32",
-									"ordinal": 5
-								}
-							},
-							{
-								"source": {
-									"name": "price",
+									"name": "price_net",
 									"type": "Decimal"
 								},
 								"sink": {
-									"type": "Decimal",
-									"ordinal": 6
-								}
-							},
-							{
-								"source": {
-									"name": "cost",
+									"name": "price_net",
 									"type": "Decimal"
-								},
-								"sink": {
-									"type": "Decimal",
-									"ordinal": 7
 								}
 							}
 						]
@@ -279,8 +229,8 @@
 									"type": "Int32"
 								},
 								"sink": {
-									"type": "Int32",
-									"ordinal": 1
+									"name": "id",
+									"type": "Int32"
 								}
 							},
 							{
@@ -289,8 +239,8 @@
 									"type": "DateTime"
 								},
 								"sink": {
-									"type": "DateTime",
-									"ordinal": 2
+									"name": "datetime",
+									"type": "DateTime"
 								}
 							},
 							{
@@ -299,8 +249,8 @@
 									"type": "Int32"
 								},
 								"sink": {
-									"type": "Int32",
-									"ordinal": 3
+									"name": "product_id",
+									"type": "Int32"
 								}
 							},
 							{
@@ -309,8 +259,8 @@
 									"type": "Int32"
 								},
 								"sink": {
-									"type": "Int32",
-									"ordinal": 4
+									"name": "shop_id",
+									"type": "Int32"
 								}
 							},
 							{
@@ -319,8 +269,8 @@
 									"type": "Int32"
 								},
 								"sink": {
-									"type": "Int32",
-									"ordinal": 5
+									"name": "qnty",
+									"type": "Int32"
 								}
 							},
 							{
@@ -329,8 +279,8 @@
 									"type": "Decimal"
 								},
 								"sink": {
-									"type": "Decimal",
-									"ordinal": 6
+									"name": "price",
+									"type": "Decimal"
 								}
 							},
 							{
@@ -339,8 +289,8 @@
 									"type": "Decimal"
 								},
 								"sink": {
-									"type": "Decimal",
-									"ordinal": 7
+									"name": "cost",
+									"type": "Decimal"
 								}
 							}
 						]
@@ -398,68 +348,18 @@
 									"type": "Int32"
 								},
 								"sink": {
-									"type": "Int32",
-									"ordinal": 1
-								}
-							},
-							{
-								"source": {
-									"name": "datetime",
-									"type": "DateTime"
-								},
-								"sink": {
-									"type": "DateTime",
-									"ordinal": 2
-								}
-							},
-							{
-								"source": {
-									"name": "product_id",
+									"name": "id",
 									"type": "Int32"
-								},
-								"sink": {
-									"type": "Int32",
-									"ordinal": 3
 								}
 							},
 							{
 								"source": {
-									"name": "shop_id",
-									"type": "Int32"
+									"name": "name",
+									"type": "String"
 								},
 								"sink": {
-									"type": "Int32",
-									"ordinal": 4
-								}
-							},
-							{
-								"source": {
-									"name": "qnty",
-									"type": "Int32"
-								},
-								"sink": {
-									"type": "Int32",
-									"ordinal": 5
-								}
-							},
-							{
-								"source": {
-									"name": "price",
-									"type": "Decimal"
-								},
-								"sink": {
-									"type": "Decimal",
-									"ordinal": 6
-								}
-							},
-							{
-								"source": {
-									"name": "cost",
-									"type": "Decimal"
-								},
-								"sink": {
-									"type": "Decimal",
-									"ordinal": 7
+									"name": "name",
+									"type": "String"
 								}
 							}
 						]
@@ -517,68 +417,18 @@
 									"type": "Int32"
 								},
 								"sink": {
-									"type": "Int32",
-									"ordinal": 1
-								}
-							},
-							{
-								"source": {
-									"name": "datetime",
-									"type": "DateTime"
-								},
-								"sink": {
-									"type": "DateTime",
-									"ordinal": 2
-								}
-							},
-							{
-								"source": {
-									"name": "product_id",
+									"name": "id",
 									"type": "Int32"
-								},
-								"sink": {
-									"type": "Int32",
-									"ordinal": 3
 								}
 							},
 							{
 								"source": {
-									"name": "shop_id",
-									"type": "Int32"
+									"name": "name",
+									"type": "String"
 								},
 								"sink": {
-									"type": "Int32",
-									"ordinal": 4
-								}
-							},
-							{
-								"source": {
-									"name": "qnty",
-									"type": "Int32"
-								},
-								"sink": {
-									"type": "Int32",
-									"ordinal": 5
-								}
-							},
-							{
-								"source": {
-									"name": "price",
-									"type": "Decimal"
-								},
-								"sink": {
-									"type": "Decimal",
-									"ordinal": 6
-								}
-							},
-							{
-								"source": {
-									"name": "cost",
-									"type": "Decimal"
-								},
-								"sink": {
-									"type": "Decimal",
-									"ordinal": 7
+									"name": "name",
+									"type": "String"
 								}
 							}
 						]
