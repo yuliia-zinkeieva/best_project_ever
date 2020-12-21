@@ -935,13 +935,13 @@
 					],
 					"transformations": [
 						{
-							"name": "Select1"
+							"name": "Select2"
 						},
 						{
-							"name": "Aggregate1"
+							"name": "Filter1"
 						}
 					],
-					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['data/**/dbo.arrivals.csv']) ~> Arrivals\nsource(output(\n\t\tid as short,\n\t\tdatetime as string,\n\t\tproduct_id as short,\n\t\tshop_id as boolean,\n\t\tqnty as short,\n\t\tprice as double,\n\t\tcost as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['data/**/dbo.sales.csv']) ~> Sales\nSales select(mapColumn(\n\t\tcost\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 aggregate(Total = sum(cost)) ~> Aggregate1\nArrivals sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['data/**/dbo.arrivals.csv']) ~> Arrivals\nsource(output(\n\t\tid as short,\n\t\tdatetime as string,\n\t\tproduct_id as short,\n\t\tshop_id as boolean,\n\t\tqnty as short,\n\t\tprice as double,\n\t\tcost as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['data/**/dbo.sales.csv']) ~> Sales\nSales select(mapColumn(\n\t\tid,\n\t\tdatetime,\n\t\tproduct_id,\n\t\tshop_id,\n\t\tqnty,\n\t\tprice,\n\t\tcost\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: true) ~> Select2\nSelect2 filter(toDate(datetime, \"yyy-MM-dd\") < currentDate(\"yyyy-MM-dd\")) ~> Filter1\nArrivals sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
 				}
 			},
 			"dependsOn": [
