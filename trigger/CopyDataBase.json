@@ -1,0 +1,24 @@
+{
+	"name": "CopyDataBase",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pipeline1",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 24,
+				"startTime": "2020-12-21T07:00:00",
+				"timeZone": "FLE Standard Time"
+			}
+		}
+	}
+}
