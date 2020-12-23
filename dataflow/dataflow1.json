@@ -19,21 +19,22 @@
 					"name": "Sales"
 				}
 			],
-			"sinks": [
-				{
-					"dataset": {
-						"referenceName": "OutputStream",
-						"type": "DatasetReference"
-					},
-					"name": "sink1"
-				}
-			],
+			"sinks": [],
 			"transformations": [
 				{
+					"name": "Filter1"
+				},
+				{
+					"name": "Filter2"
+				},
+				{
 					"name": "Join1"
+				},
+				{
+					"name": "Select1"
 				}
 			],
-			"script": "source(output(\n\t\tid as short,\n\t\tdatetime as string,\n\t\tproduct_id as short,\n\t\tshop_id as short,\n\t\tqnty as short\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['data/**/dbo.arrivals.csv']) ~> Arrivals\nsource(output(\n\t\tid as short,\n\t\tdatetime as string,\n\t\tproduct_id as short,\n\t\tshop_id as boolean,\n\t\tqnty as short,\n\t\tprice as double,\n\t\tcost as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['data/**/dbo.sales.csv']) ~> Sales\nSales, Arrivals join(Sales@product_id == Arrivals@product_id,\n\tjoinType:'outer',\n\tbroadcast: 'auto')~> Join1\nArrivals sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+			"script": "parameters{\n\tdate_format as string (\"yyyy-MM-dd\")\n}\nsource(output(\n\t\tid as short,\n\t\tdatetime as string,\n\t\tproduct_id as short,\n\t\tshop_id as short,\n\t\tqnty as short\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:[(\"data/\" + toString(year(currentDate())) + \"/\" + toString(month(currentDate())) + \"/\" + toString(dayOfMonth(minus(currentDate(), 1)) ) + \"/dbo.arrivals.csv\")]) ~> Arrivals\nsource(output(\n\t\tid as short,\n\t\tdatetime as string,\n\t\tproduct_id as short,\n\t\tshop_id as short,\n\t\tqnty as short,\n\t\tprice as double,\n\t\tcost as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:[(\"data/\" + toString(year(currentDate())) + \"/\" + toString(month(currentDate())) + \"/\" + toString(dayOfMonth(minus(currentDate(), 1)) ) + \"/dbo.sales.csv\")]) ~> Sales\nArrivals filter(\r\ntoDate(datetime, $date_format) < currentDate($date_format)) ~> Filter1\nSales filter(\r\ntoDate(datetime, $date_format) < currentDate($date_format)) ~> Filter2\nFilter2, Filter1 join(toDate(Sales@datetime, $date_format) == toDate(Arrivals@datetime, $date_format)\n\t&& Sales@product_id == Arrivals@product_id\n\t&& Sales@shop_id == Arrivals@shop_id,\n\tjoinType:'outer',\n\tbroadcast: 'auto')~> Join1\nFilter1 select(mapColumn(\n\t\tid,\n\t\tdatetime,\n\t\tproduct_id,\n\t\tshop_id,\n\t\tqnty\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1"
 		}
 	}
 }
