@@ -7,10 +7,6 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "DataFactoryZink"
 		},
-		"ADLSGen2_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'ADLSGen2'"
-		},
 		"AzureDataLakeStorage1_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
@@ -19,13 +15,17 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'servicePrincipalKey' of 'AzureDataLakeStore1'"
 		},
+		"AzureSqlDatabase1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
+		},
 		"SqlServer1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SqlServer1'"
 		},
-		"ADLSGen2_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://sqlvavvi2bf7o4mdds.dfs.core.windows.net"
+		"SqlServer2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SqlServer2'"
 		},
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"type": "string",
@@ -60,23 +60,6 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
-		{
-			"name": "[concat(parameters('factoryName'), '/ADLSGen2')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobFS",
-				"typeProperties": {
-					"url": "[parameters('ADLSGen2_properties_typeProperties_url')]",
-					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('ADLSGen2_accountKey')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -129,6 +112,19 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSqlDatabase1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SqlServer1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -137,6 +133,19 @@
 				"type": "SqlServer",
 				"typeProperties": {
 					"connectionString": "[parameters('SqlServer1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SqlServer2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('SqlServer2_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -249,35 +258,6 @@
 					"rowDelimiter": "\n",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStore1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/OutputStream')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStore1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureDataLakeStoreLocation",
-						"folderPath": {
-							"value": "/output/@{formatDateTime(adddays(utcnow(),-1),'yyyy')}/@{formatDateTime(adddays(utcnow(),-1),'MM')}/@{formatDateTime(adddays(utcnow(),-1),'dd')}\n",
-							"type": "Expression"
-						}
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
 					"quoteChar": "\""
 				},
 				"schema": []
@@ -426,6 +406,54 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "datetime",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "shop_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "product_name",
+						"type": "varchar"
+					},
+					{
+						"name": "merge",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "remains",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "output"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
 			]
 		},
 		{
@@ -934,7 +962,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "OutputStream",
+								"referenceName": "AzureSqlTable1",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -972,12 +1000,12 @@
 							"name": "Select3"
 						}
 					],
-					"script": "parameters{\n\tdate_format as string (\"yyyy-MM-dd\")\n}\nsource(output(\n\t\tid as short,\n\t\tdatetime as string,\n\t\tproduct_id as short,\n\t\tshop_id as short,\n\t\tqnty as short\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:[(\"data/\" + toString(year(currentDate())) + \"/\" + toString(month(currentDate())) + \"/\" + toString(dayOfMonth(minus(currentDate(), 1)) ) + \"/dbo.arrivals.csv\")]) ~> Arrivals\nsource(output(\n\t\tid as short,\n\t\tdatetime as string,\n\t\tproduct_id as short,\n\t\tshop_id as short,\n\t\tqnty as short,\n\t\tprice as double,\n\t\tcost as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:[(\"data/\" + toString(year(currentDate())) + \"/\" + toString(month(currentDate())) + \"/\" + toString(dayOfMonth(minus(currentDate(), 1)) ) + \"/dbo.sales.csv\")]) ~> Sales\nsource(output(\n\t\tid as short,\n\t\tname as string,\n\t\tcategory_id as boolean,\n\t\tprice_net as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:[(\"data/\" + toString(year(currentDate())) + \"/\" + toString(month(currentDate())) + \"/\" + toString(dayOfMonth(minus(currentDate(), 1)) ) + \"/dbo.products.csv\")]) ~> Products\nArrivals filter(toDate(datetime, $date_format) < currentDate($date_format)) ~> Filter1\nSales filter(toDate(datetime, $date_format) < currentDate($date_format)) ~> Filter2\nFilter1 select(mapColumn(\n\t\tproduct_id_arrivals = product_id,\n\t\tshop_id_arrivals = shop_id,\n\t\tqnty_arrivals = qnty\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select2\nJoin2 aggregate(groupBy(shop_id_arrivals,\n\t\tproduct_id_arrivals),\n\tqnty = sum(qnty_arrivals),\n\t\tprice = sum(price_net * qnty_arrivals)) ~> Aggregate2\nSelect2, Products join(product_id_arrivals == id,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join2\nFilter2 aggregate(groupBy(shop_id,\n\t\tproduct_id),\n\tsold = sum(cost)) ~> Aggregate3\nAggregate2, Aggregate3 join(shop_id_arrivals == shop_id\n\t&& product_id_arrivals == product_id,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join3\nJoin3 aggregate(groupBy(shop_id,\n\t\tproduct_id),\n\tmerge = max(sold-price)) ~> Aggregate4\nAggregate4, Products join(product_id == id,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join4\nJoin4 select(mapColumn(\n\t\tshop_id,\n\t\tname,\n\t\tmerge\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select3\nSelect3 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+					"script": "parameters{\n\tdate_format as string (\"yyyy-MM-dd\")\n}\nsource(output(\n\t\tid as short,\n\t\tdatetime as string,\n\t\tproduct_id as short,\n\t\tshop_id as short,\n\t\tqnty as short\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:[(\"data/\" + toString(year(currentDate())) + \"/\" + toString(month(currentDate())) + \"/\" + toString(dayOfMonth(minus(currentDate(), 1)) ) + \"/dbo.arrivals.csv\")]) ~> Arrivals\nsource(output(\n\t\tid as short,\n\t\tdatetime as string,\n\t\tproduct_id as short,\n\t\tshop_id as short,\n\t\tqnty as short,\n\t\tprice as double,\n\t\tcost as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:[(\"data/\" + toString(year(currentDate())) + \"/\" + toString(month(currentDate())) + \"/\" + toString(dayOfMonth(minus(currentDate(), 1)) ) + \"/dbo.sales.csv\")]) ~> Sales\nsource(output(\n\t\tid as short,\n\t\tname as string,\n\t\tcategory_id as boolean,\n\t\tprice_net as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:[(\"data/\" + toString(year(currentDate())) + \"/\" + toString(month(currentDate())) + \"/\" + toString(dayOfMonth(minus(currentDate(), 1)) ) + \"/dbo.products.csv\")]) ~> Products\nArrivals filter(toDate(datetime, $date_format) < currentDate($date_format)) ~> Filter1\nSales filter(toDate(datetime, $date_format) < currentDate($date_format)) ~> Filter2\nFilter1 select(mapColumn(\n\t\tproduct_id_arrivals = product_id,\n\t\tshop_id_arrivals = shop_id,\n\t\tqnty_arrivals = qnty\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select2\nJoin2 aggregate(groupBy(shop_id_arrivals,\n\t\tproduct_id_arrivals),\n\tqnty = sum(qnty_arrivals),\n\t\tprice = sum(price_net * qnty_arrivals)) ~> Aggregate2\nSelect2, Products join(product_id_arrivals == id,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join2\nFilter2 aggregate(groupBy(shop_id,\n\t\tproduct_id),\n\tsold = sum(cost),\n\t\tsold_qnty = sum(qnty)) ~> Aggregate3\nAggregate2, Aggregate3 join(shop_id_arrivals == shop_id\n\t&& product_id_arrivals == product_id,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join3\nJoin3 aggregate(groupBy(datetime = currentDate(),\n\t\tshop_id,\n\t\tproduct_id),\n\tmerge = max(sold-price),\n\t\tremains = max(qnty-sold_qnty)) ~> Aggregate4\nAggregate4, Products join(product_id == id,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join4\nJoin4 select(mapColumn(\n\t\tdatetime,\n\t\tshop_id,\n\t\tproduct_name = name,\n\t\tmerge,\n\t\tremains\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select3\nSelect3 sink(input(\n\t\tdatetime as timestamp,\n\t\tshop_id as integer,\n\t\tproduct_name as string,\n\t\tmerge as decimal(18,0),\n\t\tremains as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tpartitionBy('hash', 1),\n\tdateFormat:'yyyy/MM/dd',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/CopyDbPath')]",
-				"[concat(variables('factoryId'), '/datasets/OutputStream')]"
+				"[concat(variables('factoryId'), '/datasets/AzureSqlTable1')]"
 			]
 		},
 		{
@@ -987,25 +1015,11 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Execute CopyData",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "CopyDataPipeline",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "dataflow1",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [
 							{
-								"activity": "Execute CopyData",
+								"activity": "Execute Pipeline1",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1023,7 +1037,9 @@
 							"dataflow": {
 								"referenceName": "dataflow1",
 								"type": "DataFlowReference",
-								"parameters": {},
+								"parameters": {
+									"date_format": "\"yyyy-MM-dd\""
+								},
 								"datasetParameters": {
 									"Arrivals": {},
 									"Sales": {},
@@ -1038,13 +1054,27 @@
 							},
 							"traceLevel": "Fine"
 						}
+					},
+					{
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "CopyDataPipeline",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
 					}
 				],
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/CopyDataPipeline')]",
-				"[concat(variables('factoryId'), '/dataflows/dataflow1')]"
+				"[concat(variables('factoryId'), '/dataflows/dataflow1')]",
+				"[concat(variables('factoryId'), '/pipelines/CopyDataPipeline')]"
 			]
 		},
 		{

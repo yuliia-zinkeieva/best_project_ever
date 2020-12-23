@@ -5,20 +5,20 @@
 		"factoryName": {
 			"value": "DataFactoryZink"
 		},
-		"ADLSGen2_accountKey": {
-			"value": ""
-		},
 		"AzureDataLakeStorage1_accountKey": {
 			"value": ""
 		},
 		"AzureDataLakeStore1_servicePrincipalKey": {
 			"value": ""
 		},
+		"AzureSqlDatabase1_connectionString": {
+			"value": ""
+		},
 		"SqlServer1_connectionString": {
 			"value": ""
 		},
-		"ADLSGen2_properties_typeProperties_url": {
-			"value": "https://sqlvavvi2bf7o4mdds.dfs.core.windows.net"
+		"SqlServer2_connectionString": {
+			"value": ""
 		},
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"value": "https://sqlvavvi2bf7o4mdds.dfs.core.windows.net"
