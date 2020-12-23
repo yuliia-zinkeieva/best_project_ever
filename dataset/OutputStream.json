@@ -1,20 +1,9 @@
 {
 	"name": "OutputStream",
 	"properties": {
-		"linkedServiceName": {
-			"referenceName": "AzureDataLakeStore1",
-			"type": "LinkedServiceReference"
-		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
-			"location": {
-				"type": "AzureDataLakeStoreLocation",
-				"folderPath": {
-					"value": "/output/@{formatDateTime(adddays(utcnow(),-1),'yyyy')}/@{formatDateTime(adddays(utcnow(),-1),'MM')}/@{formatDateTime(adddays(utcnow(),-1),'dd')}\n",
-					"type": "Expression"
-				}
-			},
 			"columnDelimiter": ",",
 			"rowDelimiter": "\n",
 			"escapeChar": "\\",

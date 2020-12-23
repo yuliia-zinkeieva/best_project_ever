@@ -3,29 +3,9 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Execute CopyData",
-				"type": "ExecutePipeline",
-				"dependsOn": [],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "CopyDataPipeline",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
 				"name": "dataflow1",
 				"type": "ExecuteDataFlow",
-				"dependsOn": [
-					{
-						"activity": "Execute CopyData",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -37,7 +17,10 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "dataflow1",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"parameters": {
+							"date_format": "\"yyyy-MM-dd\""
+						}
 					},
 					"compute": {
 						"coreCount": 8,
