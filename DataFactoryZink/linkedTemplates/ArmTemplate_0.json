@@ -922,6 +922,13 @@
 								"type": "DatasetReference"
 							},
 							"name": "Sales"
+						},
+						{
+							"dataset": {
+								"referenceName": "CopyDbPath",
+								"type": "DatasetReference"
+							},
+							"name": "Products"
 						}
 					],
 					"sinks": [
@@ -935,10 +942,31 @@
 					],
 					"transformations": [
 						{
-							"name": "Join1"
+							"name": "Filter1"
+						},
+						{
+							"name": "Filter2"
+						},
+						{
+							"name": "Select1"
+						},
+						{
+							"name": "Select2"
+						},
+						{
+							"name": "Aggregate2"
+						},
+						{
+							"name": "Join2"
+						},
+						{
+							"name": "Aggregate3"
+						},
+						{
+							"name": "Sort1"
 						}
 					],
-					"script": "source(output(\n\t\tid as short,\n\t\tdatetime as string,\n\t\tproduct_id as short,\n\t\tshop_id as short,\n\t\tqnty as short\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['data/**/dbo.arrivals.csv']) ~> Arrivals\nsource(output(\n\t\tid as short,\n\t\tdatetime as string,\n\t\tproduct_id as short,\n\t\tshop_id as boolean,\n\t\tqnty as short,\n\t\tprice as double,\n\t\tcost as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['data/**/dbo.sales.csv']) ~> Sales\nSales, Arrivals join(Sales@product_id == Arrivals@product_id,\n\tjoinType:'outer',\n\tbroadcast: 'auto')~> Join1\nArrivals sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+					"script": "parameters{\n\tdate_format as string (\"yyyy-MM-dd\")\n}\nsource(output(\n\t\tid as short,\n\t\tdatetime as string,\n\t\tproduct_id as short,\n\t\tshop_id as short,\n\t\tqnty as short\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:[(\"data/\" + toString(year(currentDate())) + \"/\" + toString(month(currentDate())) + \"/\" + toString(dayOfMonth(minus(currentDate(), 1)) ) + \"/dbo.arrivals.csv\")]) ~> Arrivals\nsource(output(\n\t\tid as short,\n\t\tdatetime as string,\n\t\tproduct_id as short,\n\t\tshop_id as short,\n\t\tqnty as short,\n\t\tprice as double,\n\t\tcost as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:[(\"data/\" + toString(year(currentDate())) + \"/\" + toString(month(currentDate())) + \"/\" + toString(dayOfMonth(minus(currentDate(), 1)) ) + \"/dbo.sales.csv\")]) ~> Sales\nsource(output(\n\t\tid as short,\n\t\tname as string,\n\t\tcategory_id as boolean,\n\t\tprice_net as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:[(\"data/\" + toString(year(currentDate())) + \"/\" + toString(month(currentDate())) + \"/\" + toString(dayOfMonth(minus(currentDate(), 1)) ) + \"/dbo.products.csv\")]) ~> Products\nArrivals filter(toDate(datetime, $date_format) < currentDate($date_format)) ~> Filter1\nSales filter(toDate(datetime, $date_format) < currentDate($date_format)) ~> Filter2\nFilter2 select(mapColumn(\n\t\tproduct_id,\n\t\tshop_id,\n\t\tqnty,\n\t\tprice,\n\t\tcost\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nFilter1 select(mapColumn(\n\t\tproduct_id_arrivals = product_id,\n\t\tshop_id_arrivals = shop_id,\n\t\tqnty_arrivals = qnty\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select2\nJoin2 aggregate(groupBy(shop_id_arrivals,\n\t\tproduct_id_arrivals),\n\tqnty = sum(qnty_arrivals),\n\t\tprice = sum(price_net * qnty_arrivals)) ~> Aggregate2\nSelect2, Products join(product_id_arrivals == id,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join2\nSort1 aggregate(groupBy(shop_id),\n\tsold = sum(cost)) ~> Aggregate3\nSales sort(asc(shop_id, true)) ~> Sort1\nAggregate2 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
 				}
 			},
 			"dependsOn": [
@@ -993,6 +1021,7 @@
 								"datasetParameters": {
 									"Arrivals": {},
 									"Sales": {},
+									"Products": {},
 									"sink1": {}
 								}
 							},
