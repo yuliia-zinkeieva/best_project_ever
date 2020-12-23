@@ -1,0 +1,58 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "DataFactoryZink"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CopyDbPath",
+								"type": "DatasetReference"
+							},
+							"name": "Arrivals"
+						},
+						{
+							"dataset": {
+								"referenceName": "CopyDbPath",
+								"type": "DatasetReference"
+							},
+							"name": "Sales"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "OutputStream",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "Join1"
+						}
+					],
+					"script": "source(output(\n\t\tid as short,\n\t\tdatetime as string,\n\t\tproduct_id as short,\n\t\tshop_id as short,\n\t\tqnty as short\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['data/**/dbo.arrivals.csv']) ~> Arrivals\nsource(output(\n\t\tid as short,\n\t\tdatetime as string,\n\t\tproduct_id as short,\n\t\tshop_id as boolean,\n\t\tqnty as short,\n\t\tprice as double,\n\t\tcost as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['data/**/dbo.sales.csv']) ~> Sales\nSales, Arrivals join(Sales@product_id == Arrivals@product_id,\n\tjoinType:'outer',\n\tbroadcast: 'auto')~> Join1\nArrivals sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
