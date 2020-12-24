@@ -23,7 +23,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dataflow1",
+						"referenceName": "DataMigration",
 						"type": "DataFlowReference",
 						"parameters": {
 							"date_format": "\"yyyy-MM-dd\""
