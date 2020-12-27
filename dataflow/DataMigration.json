@@ -37,22 +37,22 @@
 			],
 			"transformations": [
 				{
-					"name": "Filter1"
+					"name": "ArrivalsFilterByDate"
 				},
 				{
-					"name": "Filter2"
+					"name": "SalesFilterByDate"
 				},
 				{
-					"name": "Select2"
+					"name": "RenameColumns"
 				},
 				{
-					"name": "Aggregate2"
+					"name": "ArrivalsFinalCostAndQnty"
 				},
 				{
-					"name": "Join2"
+					"name": "JoinProductsToArrivals"
 				},
 				{
-					"name": "Aggregate3"
+					"name": "SalesFinalSoldnQnty"
 				},
 				{
 					"name": "JoinArrivalsAndSales"
@@ -67,7 +67,7 @@
 					"name": "FinalTableSelect"
 				}
 			],
-			"script": "parameters{\n\tdate_format as string (\"yyyy-MM-dd\")\n}\nsource(output(\n\t\tid as short,\n\t\tdatetime as string,\n\t\tproduct_id as short,\n\t\tshop_id as short,\n\t\tqnty as short\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:[(\"data/\" + toString(year(currentDate())) + \"/\" + toString(month(currentDate())) + \"/\" + toString(dayOfMonth(minus(currentDate(), 1)) ) + \"/dbo.arrivals.csv\")]) ~> Arrivals\nsource(output(\n\t\tid as short,\n\t\tdatetime as string,\n\t\tproduct_id as short,\n\t\tshop_id as short,\n\t\tqnty as short,\n\t\tprice as double,\n\t\tcost as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:[(\"data/\" + toString(year(currentDate())) + \"/\" + toString(month(currentDate())) + \"/\" + toString(dayOfMonth(minus(currentDate(), 1)) ) + \"/dbo.sales.csv\")]) ~> Sales\nsource(output(\n\t\tid as short,\n\t\tname as string,\n\t\tcategory_id as boolean,\n\t\tprice_net as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:[(\"data/\" + toString(year(currentDate())) + \"/\" + toString(month(currentDate())) + \"/\" + toString(dayOfMonth(minus(currentDate(), 1)) ) + \"/dbo.products.csv\")]) ~> Products\nArrivals filter(toDate(datetime, $date_format) < currentDate($date_format)) ~> Filter1\nSales filter(toDate(datetime, $date_format) < currentDate($date_format)) ~> Filter2\nFilter1 select(mapColumn(\n\t\tproduct_id_arrivals = product_id,\n\t\tshop_id_arrivals = shop_id,\n\t\tqnty_arrivals = qnty\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select2\nJoin2 aggregate(groupBy(shop_id_arrivals,\n\t\tproduct_id_arrivals),\n\tqnty = sum(qnty_arrivals),\n\t\tprice = sum(price_net * qnty_arrivals)) ~> Aggregate2\nSelect2, Products join(product_id_arrivals == id,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join2\nFilter2 aggregate(groupBy(shop_id,\n\t\tproduct_id),\n\tsold = sum(cost),\n\t\tsold_qnty = sum(qnty)) ~> Aggregate3\nAggregate2, Aggregate3 join(shop_id_arrivals == shop_id\n\t&& product_id_arrivals == product_id,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> JoinArrivalsAndSales\nJoinArrivalsAndSales aggregate(groupBy(datetime = currentDate(),\n\t\tshop_id,\n\t\tproduct_id),\n\tmerge = max(sold-price),\n\t\tremains = max(qnty-sold_qnty)) ~> MargeAndRemainsCalculation\nMargeAndRemainsCalculation, Products join(product_id == id,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> JoinProductOnID\nJoinProductOnID select(mapColumn(\n\t\tdatetime,\n\t\tshop_id,\n\t\tproduct_name = name,\n\t\tmerge,\n\t\tremains\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> FinalTableSelect\nFinalTableSelect sink(input(\n\t\tdatetime as timestamp,\n\t\tshop_id as integer,\n\t\tproduct_name as string,\n\t\tmerge as decimal(18,0),\n\t\tremains as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tpartitionBy('hash', 1),\n\tdateFormat:'yyyy/MM/dd',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> DBUnload"
+			"script": "parameters{\n\tdate_format as string (\"yyyy-MM-dd\")\n}\nsource(output(\n\t\tid as short,\n\t\tdatetime as string,\n\t\tproduct_id as short,\n\t\tshop_id as short,\n\t\tqnty as short\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:[(\"data/\" + toString(year(currentDate())) + \"/\" + toString(month(currentDate())) + \"/\" + toString(dayOfMonth(minus(currentDate(), 1)) ) + \"/dbo.arrivals.csv\")]) ~> Arrivals\nsource(output(\n\t\tid as short,\n\t\tdatetime as string,\n\t\tproduct_id as short,\n\t\tshop_id as short,\n\t\tqnty as short,\n\t\tprice as double,\n\t\tcost as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:[(\"data/\" + toString(year(currentDate())) + \"/\" + toString(month(currentDate())) + \"/\" + toString(dayOfMonth(minus(currentDate(), 1)) ) + \"/dbo.sales.csv\")]) ~> Sales\nsource(output(\n\t\tid as short,\n\t\tname as string,\n\t\tcategory_id as boolean,\n\t\tprice_net as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:[(\"data/\" + toString(year(currentDate())) + \"/\" + toString(month(currentDate())) + \"/\" + toString(dayOfMonth(minus(currentDate(), 1)) ) + \"/dbo.products.csv\")]) ~> Products\nArrivals filter(toDate(datetime, $date_format) < currentDate($date_format)) ~> ArrivalsFilterByDate\nSales filter(toDate(datetime, $date_format) < currentDate($date_format)) ~> SalesFilterByDate\nArrivalsFilterByDate select(mapColumn(\n\t\tproduct_id_arrivals = product_id,\n\t\tshop_id_arrivals = shop_id,\n\t\tqnty_arrivals = qnty\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> RenameColumns\nJoinProductsToArrivals aggregate(groupBy(shop_id_arrivals,\n\t\tproduct_id_arrivals),\n\tqnty = sum(qnty_arrivals),\n\t\tprice = sum(price_net * qnty_arrivals)) ~> ArrivalsFinalCostAndQnty\nRenameColumns, Products join(product_id_arrivals == id,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> JoinProductsToArrivals\nSalesFilterByDate aggregate(groupBy(shop_id,\n\t\tproduct_id),\n\tsold = sum(cost),\n\t\tsold_qnty = sum(qnty)) ~> SalesFinalSoldnQnty\nArrivalsFinalCostAndQnty, SalesFinalSoldnQnty join(shop_id_arrivals == shop_id\n\t&& product_id_arrivals == product_id,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~>JoinArrivalsAndSales\nJoinArrivalsAndSales aggregate(groupBy(datetime = currentDate(),\n\t\tshop_id,\n\t\tproduct_id),\n\tmerge = max(sold-price),\n\t\tremains = max(qnty-sold_qnty)) ~> MargeAndRemainsCalculation\nMargeAndRemainsCalculation, Products join(product_id == id,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> JoinProductOnID\nJoinProductOnID select(mapColumn(\n\t\tdatetime,\n\t\tshop_id,\n\t\tproduct_name = name,\n\t\tmerge,\n\t\tremains\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> FinalTableSelect\nFinalTableSelect sink(input(\n\t\tdatetime as timestamp,\n\t\tshop_id as integer,\n\t\tproduct_name as string,\n\t\tmerge as decimal(18,0),\n\t\tremains as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tpartitionBy('hash', 1),\n\tdateFormat:'yyyy/MM/dd',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> DBUnload"  
 		}
 	}
 }
